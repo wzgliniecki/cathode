@@ -1,14 +1,21 @@
 from rich.live import Live
 from rich.console import Console
+from cathode.app.layout import MainLayout
+import time
 
 
 def run() -> None:
     console = Console()
 
-    initial_message = "Cathode starting..."
+    with Live(console=console, refresh_per_second=30) as live:
+        main_layout = MainLayout()
+        current_frame_time = 0.0
 
-    with Live(initial_message, console=console, refresh_per_second=30) as live:
         while True:
-            # TODO - whole project
+            start_time_frame = time.perf_counter()
 
-            live.update(initial_message)
+            main_layout.update(current_frame_time=current_frame_time)
+            live.update(main_layout.layout)
+
+            end_time_frame = time.perf_counter()
+            current_frame_time = end_time_frame - start_time_frame

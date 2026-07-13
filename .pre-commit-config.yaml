@@ -13,3 +13,8 @@ repos:
       - id: check-yaml
       - id: check-merge-conflict
       - id: check-added-large-files
+
+  - repo: https://github.com/RobertCraigie/pyright-python
+    rev: v1.1.392
+    hooks:
+      - id: pyright
