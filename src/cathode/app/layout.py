@@ -3,6 +3,7 @@ from rich.panel import Panel
 import psutil
 import numpy as np
 from PIL import Image
+from cathode.config.settings import RenderSettings
 
 
 class PerformancePanel:
@@ -16,8 +17,7 @@ class PerformancePanel:
         if self.current_time_frame == 0:
             return 0.0
         temp = 1 / self.current_time_frame
-        # TODO - move that to settings and import here
-        return 30.0 if temp > 30 else temp
+        return float(RenderSettings.max_fps) if temp > RenderSettings.max_fps else temp
 
     def update(self, current_time_frame: float) -> None:
         # FPS
@@ -48,7 +48,7 @@ class PerformancePanel:
 class ImagePanel:
     def __init__(self, frame: np.ndarray | None) -> None:
         self.frame = frame
-        self.bits = 3
+        self.bits = RenderSettings.color_compression_level
 
         def build_cache():
             levels = 256 >> self.bits  # number of quantization levels
@@ -75,10 +75,8 @@ class ImagePanel:
         def quantize_rgb(r, g, b, bits=self.bits):
             return (r >> bits, g >> bits, b >> bits)
 
-        # Hardcoded resolution
-        # TODO - change it
-        target_w = 50
-        target_h = 25
+        target_w = RenderSettings.image_width
+        target_h = RenderSettings.image_height
 
         # Convert BGR → RGB
         rgb = self.frame[:, :, ::-1].astype("uint8")
@@ -112,7 +110,9 @@ class ImagePanel:
 class MainLayout:
     def __init__(self) -> None:
         self.layout = Layout()
-        self.performance_panel = PerformancePanel(current_time_frame=30.0)
+        self.performance_panel = PerformancePanel(
+            current_time_frame=RenderSettings.max_fps
+        )
         self.image_panel = ImagePanel(frame=None)
 
         self.layout.split_row(
