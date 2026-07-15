@@ -2,8 +2,10 @@ from rich.layout import Layout
 from rich.panel import Panel
 import psutil
 import numpy as np
-from PIL import Image
 from cathode.config.settings import RenderSettings
+from .pipeline import Pipeline
+from cathode.converters.color_blocks import ColorBlocksConverter
+from cathode.converters.ascii import ASCIIconverter
 
 
 class PerformancePanel:
@@ -49,62 +51,29 @@ class ImagePanel:
     def __init__(self, frame: np.ndarray | None) -> None:
         self.frame = frame
         self.bits = RenderSettings.color_compression_level
+        self.converter_classes = {
+            "color_blocks": ColorBlocksConverter,
+            "ascii": ASCIIconverter,
+        }
+        # self.current_converter = self.converter_classes["color_blocks"](bits=RenderSettings.color_compression_level)
+        self.current_converter = self.converter_classes["ascii"]()
 
-        def build_cache():
-            levels = 256 >> self.bits  # number of quantization levels
-            step = 256 // levels  # spacing between colors
-
-            cache = {}
-            for r in range(levels):
-                for g in range(levels):
-                    for b in range(levels):
-                        R = r * step
-                        G = g * step
-                        B = b * step
-                        cache[(r, g, b)] = (
-                            f"[on rgb({R},{G},{B})] [/on rgb({R},{G},{B})]"
-                        )
-            return cache
-
-        self.BLOCK_CACHE = build_cache()
-
-    def get_transformed_image(self) -> str:
-        if self.frame is None:
-            return "No input data"
-
-        def quantize_rgb(r, g, b, bits=self.bits):
-            return (r >> bits, g >> bits, b >> bits)
-
-        target_w = RenderSettings.image_width
-        target_h = RenderSettings.image_height
-
-        # Convert BGR → RGB
-        rgb = self.frame[:, :, ::-1].astype("uint8")
-
-        # Resize using Pillow
-        img = Image.fromarray(rgb)
-        img = img.resize((target_w, target_h), Image.Resampling.BILINEAR)
-
-        small = np.array(img)  # shape (H, W, 3)
-
-        rows = []
-        for row in small:
-            line = ""
-            for r, g, b in row:
-                # Rich color tag
-                r, g, b = quantize_rgb(r, g, b)
-                key = (int(r), int(g), int(b))
-                line += self.BLOCK_CACHE[key]
-            rows.append(line)
-
-        return "\n".join(rows)
+        self.pipeline = Pipeline(
+            converter=self.current_converter,
+            frame_effects=[],
+            text_effects=[],
+        )
 
     def update(self, frame: np.ndarray | None) -> None:
         if frame is not None:
             self.frame = frame
 
     def get_panel(self) -> Panel:
-        return Panel(self.get_transformed_image(), title="Image")
+        if self.frame is None:
+            text = "No input data"
+        else:
+            text = self.pipeline.apply(self.frame)
+        return Panel(text, title="Image")
 
 
 class MainLayout:

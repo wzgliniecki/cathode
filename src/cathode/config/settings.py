@@ -5,8 +5,8 @@ from dataclasses import dataclass
 class RenderSettings:
     """General settings"""
 
-    image_width: int = 50
-    image_height: int = 25
+    image_width: int = 40
+    image_height: int = 20
     max_fps: int = 30
     color_compression_level: int = 3
 
