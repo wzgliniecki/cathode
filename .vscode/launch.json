@@ -1,0 +1,13 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Cathode Debug",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/cathode/app/cli.py",
+            "console": "integratedTerminal",
+            "justMyCode": false
+        }
+    ]
+}
