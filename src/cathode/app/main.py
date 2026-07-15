@@ -17,7 +17,7 @@ def run() -> None:
         main_layout = MainLayout()
         current_frame_time = 0.0
         cam = CameraInput(
-            target_size=(RenderSettings.image_height, RenderSettings.image_width)
+            target_size=(RenderSettings.image_width, RenderSettings.image_height)
         )
 
         while True:
