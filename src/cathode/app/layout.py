@@ -4,8 +4,10 @@ import psutil
 import numpy as np
 from cathode.config.settings import RenderSettings
 from .pipeline import Pipeline
+from cathode.converters.base import Converter
 from cathode.converters.color_blocks import ColorBlocksConverter
 from cathode.converters.ascii import ASCIIconverter
+from cathode.layouts.effects_layout import EffectsLayout
 
 
 class PerformancePanel:
@@ -83,6 +85,7 @@ class MainLayout:
             current_time_frame=RenderSettings.max_fps
         )
         self.image_panel = ImagePanel(frame=None)
+        self.effects_layout = EffectsLayout(current_converter="ascii")
 
         self.layout.split_row(
             Layout(name="Image"),
@@ -91,11 +94,15 @@ class MainLayout:
 
         self.layout["right"].split_column(
             Layout(name="Performance"),
-            Layout(name="Effects", renderable=Panel("Effects", title="Effects")),
+            Layout(name="Effects"),
         )
 
-    def update(self, current_frame_time: float, frame: np.ndarray | None) -> None:
+    def update(self, current_frame_time: float, frame: np.ndarray | None, 
+               user_input: str | None) -> None:
         self.performance_panel.update(current_time_frame=current_frame_time)
         self.layout["Performance"].update(self.performance_panel.get_panel())
         self.image_panel.update(frame=frame)
         self.layout["Image"].update(self.image_panel.get_panel())
+        if user_input is not None:
+            self.effects_layout.update(user_input)
+        self.layout["Effects"].update(self.effects_layout.get_panel())

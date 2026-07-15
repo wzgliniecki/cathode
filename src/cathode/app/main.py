@@ -8,6 +8,15 @@ from cathode.app.input import CameraInput
 from cathode.config.settings import RenderSettings
 from cathode.config.settings import DevSettings
 
+import sys
+import select
+
+def get_key_nonblocking():
+    dr, _, _ = select.select([sys.stdin], [], [], 0)
+    if dr:
+        return sys.stdin.read(1)
+    return None
+
 
 def run() -> None:
     console = Console()
@@ -20,11 +29,14 @@ def run() -> None:
             target_size=(RenderSettings.image_width, RenderSettings.image_height)
         )
 
+
         while True:
             start_time_frame = time.perf_counter()
             frame = cam.read()
 
-            main_layout.update(current_frame_time=current_frame_time, frame=frame)
+            key = get_key_nonblocking()
+
+            main_layout.update(current_frame_time=current_frame_time, frame=frame, user_input=key)
             live.update(main_layout.layout)
 
             end_time_frame = time.perf_counter()
