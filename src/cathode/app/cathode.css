@@ -1,0 +1,118 @@
+Screen.retro {
+    background: #000000;
+    color: #00ff55;
+}
+
+Screen.retro * {
+    text-style: bold;
+}
+
+Screen.retro Static {
+    background: #001100;
+    border: tall #003300;
+}
+
+Screen.retro #image-panel {
+    border: solid #00ff55;
+    background: #000800;
+}
+
+Screen.retro #effects-panel {
+    border: solid #009944;
+    background: #000600;
+}
+
+Screen.retro #performance-panel {
+    border: solid #00cc66;
+    background: #000400;
+}
+
+
+Screen.amber {
+    background: #000000;
+    color: #ffb000;
+}
+
+Screen.amber * {
+    text-style: bold;
+}
+
+Screen.amber Static {
+    background: #1a0f00;
+    border: tall #ffb000;
+}
+
+Screen.amber #image-panel {
+    border: solid #ffb000;
+    background: #120900;
+}
+
+Screen.amber #effects-panel {
+    border: solid #cc8a00;
+    background: #0d0700;
+}
+
+Screen.amber #performance-panel {
+    border: solid #996600;
+    background: #0a0500;
+}
+
+
+Screen.blue {
+    background: #0000aa;
+    color: #ffffff;
+}
+
+Screen.blue * {
+    text-style: bold;
+}
+
+Screen.blue Static {
+    background: #000088;
+    border: tall #ffffff;
+}
+
+Screen.blue #image-panel {
+    border: solid #ffffff;
+    background: #000066;
+}
+
+Screen.blue #effects-panel {
+    border: solid #ccccff;
+    background: #000055;
+}
+
+Screen.blue #performance-panel {
+    border: solid #9999ff;
+    background: #000044;
+}
+
+
+Screen.matrix {
+    background: #000000;
+    color: #00ff00;
+}
+
+Screen.matrix * {
+    text-style: bold;
+}
+
+Screen.matrix Static {
+    background: #001900;
+    border: tall #00aa00;
+}
+
+Screen.matrix #image-panel {
+    border: solid #00ff00;
+    background: #001500;
+}
+
+Screen.matrix #effects-panel {
+    border: solid #00cc00;
+    background: #001200;
+}
+
+Screen.matrix #performance-panel {
+    border: solid #009900;
+    background: #000f00;
+}
