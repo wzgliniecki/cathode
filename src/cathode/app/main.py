@@ -12,8 +12,6 @@ from cathode.config.settings import RenderSettings, DevSettings
 from cathode.converters import CONVERTERS
 
 
-
-
 class CathodeApp(App):
     CSS_PATH = "../styles/cathode.css"
     THEMES = ["retro", "amber", "blue", "matrix"]
@@ -55,7 +53,6 @@ class CathodeApp(App):
             self.current_converter_name = "color_blocks"
         else:
             self.current_converter_name = "ascii"
-    
 
     def compose(self) -> ComposeResult:
         yield Static(self.main_layout.layout)
@@ -71,11 +68,9 @@ class CathodeApp(App):
         self.main_layout.update(
             current_frame_time=self.current_frame_time,
             frame=frame,
-            user_input=None, # separate async method
+            user_input=None,  # separate async method
             current_converter_name=self.current_converter_name,
         )
-
-
 
         self.query_one(Static).update(self.main_layout.layout)
 
