@@ -15,7 +15,7 @@ from cathode.converters import CONVERTERS
 
 
 class CathodeApp(App):
-    CSS_PATH = "cathode.css"
+    CSS_PATH = "../styles/cathode.css"
     THEMES = ["retro", "amber", "blue", "matrix"]
 
     def next_theme(self):
