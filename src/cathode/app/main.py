@@ -1,6 +1,5 @@
 from textual.app import App, ComposeResult
 from textual.widgets import Static
-from textual.containers import Horizontal, Vertical
 from textual import events
 
 import time
@@ -8,8 +7,6 @@ import time
 from cathode.app.layout import MainLayout
 from cathode.app.input import CameraInput
 from cathode.config.settings import RenderSettings, DevSettings
-
-from cathode.converters import CONVERTERS
 
 
 class CathodeApp(App):
@@ -25,12 +22,13 @@ class CathodeApp(App):
 
         self.screen.add_class(new_theme)
 
-    def __init__(self,     
-                 max_fps: int = RenderSettings.max_fps,
-                image_width: int = RenderSettings.image_width,
-                image_height: int = RenderSettings.image_height,
-                max_frames: int | None = DevSettings.max_frames
-                ):
+    def __init__(
+        self,
+        max_fps: int = RenderSettings.max_fps,
+        image_width: int = RenderSettings.image_width,
+        image_height: int = RenderSettings.image_height,
+        max_frames: int | None = DevSettings.max_frames,
+    ):
         super().__init__()
 
         RenderSettings.max_fps = max_fps
@@ -41,7 +39,6 @@ class CathodeApp(App):
 
         self.log("Render settings")
         self.log(f"FPS: {RenderSettings.max_fps}")
-
 
         self.cam = CameraInput(
             target_size=(RenderSettings.image_width, RenderSettings.image_height)
@@ -99,12 +96,12 @@ class CathodeApp(App):
     async def on_key(self, event: events.Key):
         key = event.key
 
+        # move to next style
         if key == "space":
-            # Przełączanie stylów
-            self.next_theme()  # Twoja funkcja do zmiany motywu
-            self.screen.refresh()  # odświeżenie widoku
+            self.next_theme()
+            self.screen.refresh()
 
-        # Press ANY key → switch effect
+        # move to the next converter
         elif key == "enter":
             self.next_converter()
             self.main_layout.update(

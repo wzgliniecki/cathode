@@ -4,7 +4,6 @@ import psutil
 import numpy as np
 from cathode.config.settings import RenderSettings
 from .pipeline import Pipeline
-from cathode.converters.base import Converter
 from cathode.converters.color_blocks import ColorBlocksConverter
 from cathode.converters.ascii import ASCIIconverter
 from cathode.layouts.effects_layout import EffectsLayout
@@ -54,7 +53,9 @@ class ImagePanel:
         self.frame = frame
         self.bits = RenderSettings.color_compression_level
         self.converter_classes = {
-            "color_blocks": ColorBlocksConverter(bits=RenderSettings.color_compression_level),
+            "color_blocks": ColorBlocksConverter(
+                bits=RenderSettings.color_compression_level
+            ),
             "ascii": ASCIIconverter(),
         }
         self.current_converter = self.converter_classes["color_blocks"]
@@ -65,15 +66,21 @@ class ImagePanel:
             text_effects=[],
         )
 
-    def update(self, frame: np.ndarray | None, current_converter_name: str | None,
-               current_effects_list: list[str] | None) -> None:
+    def update(
+        self,
+        frame: np.ndarray | None,
+        current_converter_name: str | None,
+        current_effects_list: list[str] | None,
+    ) -> None:
         if frame is not None:
             self.frame = frame
         if current_converter_name is not None:
             self.current_converter = self.converter_classes[current_converter_name]
         self.current_effects_list = current_effects_list
 
-        self.pipeline.update(converter=self.current_converter, frame_effects=[],text_effects=[])
+        self.pipeline.update(
+            converter=self.current_converter, frame_effects=[], text_effects=[]
+        )
 
     def get_panel(self) -> Panel:
         if self.frame is None:
@@ -102,12 +109,24 @@ class MainLayout:
             Layout(name="Effects"),
         )
 
-    def update(self, current_frame_time: float, frame: np.ndarray | None, 
-               user_input: str | None, current_converter_name: str, 
-               current_effects_list: list[str] | None = None) -> None:
+    def update(
+        self,
+        current_frame_time: float,
+        frame: np.ndarray | None,
+        user_input: str | None,
+        current_converter_name: str,
+        current_effects_list: list[str] | None = None,
+    ) -> None:
         self.performance_panel.update(current_time_frame=current_frame_time)
         self.layout["Performance"].update(self.performance_panel.get_panel())
-        self.image_panel.update(frame=frame, current_converter_name=current_converter_name,
-                                current_effects_list=current_effects_list)
+        self.image_panel.update(
+            frame=frame,
+            current_converter_name=current_converter_name,
+            current_effects_list=current_effects_list,
+        )
         self.layout["Image"].update(self.image_panel.get_panel())
-        self.layout["Effects"].update(self.effects_layout.get_layout(current_converter_name = current_converter_name))
+        self.layout["Effects"].update(
+            self.effects_layout.get_layout(
+                current_converter_name=current_converter_name
+            )
+        )

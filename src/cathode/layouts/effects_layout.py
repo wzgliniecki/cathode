@@ -3,6 +3,7 @@ from rich.table import Table
 
 from cathode.converters import CONVERTERS
 
+
 class EffectsLayout:
     def __init__(self):
         self.converter_classes = CONVERTERS
