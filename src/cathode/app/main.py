@@ -17,19 +17,31 @@ class CathodeApp(App):
     THEMES = ["retro", "amber", "blue", "matrix"]
 
     def next_theme(self):
-        # usuń stare klasy
         for theme in self.THEMES:
             self.screen.remove_class(theme)
 
-        # wybierz nowy
         self.current_theme_index = (self.current_theme_index + 1) % len(self.THEMES)
         new_theme = self.THEMES[self.current_theme_index]
 
-        # dodaj klasę
         self.screen.add_class(new_theme)
 
-    def __init__(self):
+    def __init__(self,     
+                 max_fps: int = RenderSettings.max_fps,
+                image_width: int = RenderSettings.image_width,
+                image_height: int = RenderSettings.image_height,
+                max_frames: int | None = DevSettings.max_frames
+                ):
         super().__init__()
+
+        RenderSettings.max_fps = max_fps
+        RenderSettings.image_width = image_width
+        RenderSettings.image_height = image_height
+
+        DevSettings.max_frames = max_frames
+
+        self.log("Render settings")
+        self.log(f"FPS: {RenderSettings.max_fps}")
+
 
         self.cam = CameraInput(
             target_size=(RenderSettings.image_width, RenderSettings.image_height)
@@ -107,5 +119,5 @@ class CathodeApp(App):
             pass
 
 
-def run() -> None:
+if __name__ == "__main__":
     CathodeApp().run()
